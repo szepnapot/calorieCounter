@@ -9,7 +9,7 @@ module.exports = (function() {
 
   let mealSchema = new Schema({
       name: String,
-      calorie: Number,
+      calories: Number,
       date: Date
   });
 
