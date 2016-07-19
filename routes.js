@@ -1,6 +1,7 @@
 module.exports = (function(){
   'use strict';
-  let models = require('./models/config');
+  let models = require('./models/queries');
+  let successfulPost = {status: "ok"};
 
   function index(req, res){
     res.render('index');
@@ -15,18 +16,32 @@ module.exports = (function(){
     newMeal.date = req.body.date;
     newMeal.save(function(err) {
       console.log("Model: " + newMeal);
-    if (err)
+    if (err) {
         console.log("\nError happened while saving. \
                       \nNot full body!\
                       \n");
-        res.status(404);
+        res.status(404).send(JSON.stringify("Incorrect format!"));
+        return;
+      }
+    res.json(successfulPost);
+    });
+  }
 
-    res.json({status: "ok"});
-  });
-}
+  function listMeals(req, res) {
+    models.getMeals(function(err, docs){
+      if (err) {
+        console.log(err);
+        res.status(404).send(JSON.stringify("Error during query!"));
+        return;
+      }
+      res.json(docs);
+    });
+
+  }
 
   return {
     getHomePage: index,
+    getMeals: listMeals,
     postMeal: postMeal
   }
 })();

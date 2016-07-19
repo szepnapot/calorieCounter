@@ -28,7 +28,7 @@ describe('Routing', function() {
     it("response is // {status: 'ok'} //", function(done) {
     var testTask = {name: "testing_post", calories: 0, date: "2016-01-26:12:03:10"};
     request(url)
-    .post('/todos')
+    .post('/meals')
     .send(testTask, done())
     .end(function(err, res) {
       if (err) {
@@ -42,7 +42,7 @@ describe('Routing', function() {
     it('no complete body throws 404', function(done) {
     var testTask = {calories: 0, date: "2016-01-26:12:03:10"};
     request(url)
-    .post('/todos')
+    .post('/meals')
     .send(testTask, done())
     .end(function(err, res) {
       if (err) {
@@ -55,7 +55,7 @@ describe('Routing', function() {
     it("invalid date value throws 404", function(done) {
     var testTask = {name: "testing_post", calories: 0, date: "today"};
     request(url)
-    .post('/todos')
+    .post('/meals')
     .send(testTask, done())
     .end(function(err, res) {
       if (err) {
@@ -68,7 +68,7 @@ describe('Routing', function() {
     it("plain text request object throws 404", function(done) {
     var testTask = "hy";
     request(url)
-    .post('/todos')
+    .post('/meals')
     .send(testTask, done())
     .end(function(err, res) {
       if (err) {
