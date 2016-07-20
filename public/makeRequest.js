@@ -10,7 +10,11 @@ const ajax = (function() {
     xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
     xhr.onload = function() {
       if ( xhr.readyState === 4) {
-        cb(null, JSON.parse(xhr.responseText))
+        if ( xhr.status !== 200) {
+          cb(xhr.status, null);
+          return;
+        }
+        cb(null, JSON.parse(xhr.responseText));
       }
     }
     xhr.send(data && JSON.stringify(data));
@@ -18,5 +22,5 @@ const ajax = (function() {
 
   return {
     makeRequest: makeRequest
-  }
+  };
 })();

@@ -1,47 +1,43 @@
-module.exports = (function(){
+const controller = function(queries){
   'use strict';
-  let models = require('./models/queries');
-  let successfulPost = {status: "ok"};
+  const successfulPost = {status: "ok"};
 
   function index(req, res){
     res.render('index');
   };
 
   function postMeal(req, res) {
-    console.log("Request body: ", req.body);
-    let newMeal = new models.meal();
-
-    newMeal.name = req.body.name;
-    newMeal.calories = req.body.calories;
-    newMeal.date = req.body.date;
-    newMeal.save(function(err) {
-      console.log("Model: " + newMeal);
-    if (err) {
-        console.log("\nError happened while saving. \
-                      \nNot full body!\
-                      \n");
-        res.status(404).send(JSON.stringify("Incorrect format!"));
+    let newMeal = {name : req.body.name,
+                    calories: req.body.calories,
+                    date: req.body.date};
+    queries.addMeal(newMeal, function(err) {
+      if (err) {
+        res.status(404).send("Error: " + err);
         return;
       }
-    res.json(successfulPost);
+      res.json(successfulPost);
     });
   }
 
   function listMeals(req, res) {
-    models.getMeals(function(err, docs){
+    queries.getAllMeals(function(err, cont){
       if (err) {
-        console.log(err);
-        res.status(404).send(JSON.stringify("Error during query!"));
+        res.status(404).send("Error: " + err);
         return;
       }
-      res.json(docs);
+      res.json(cont);
     });
-
   }
+
+  // function deleteMeal(req, res) {
+  //   queries.
+  // }
 
   return {
     getHomePage: index,
-    getMeals: listMeals,
+    getAll: listMeals,
     postMeal: postMeal
   }
-})();
+};
+
+module.exports = controller;

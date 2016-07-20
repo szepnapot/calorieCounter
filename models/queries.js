@@ -1,32 +1,48 @@
-
-module.exports = (function() {
+const queries = function(schema){
   'use strict';
 
-  const database = require('./config');
-  const mongoose = database.mongoose;
-  const mealSchema = database.meal;
+  const mongoose = schema.mongoose;
+  const mealSchema = schema.mealSchema;
   const Meal = mongoose.model('Meal', mealSchema);
 
-  mongoose.connect(database.url, function (error) {
-    if (error) {
-        console.log(error);
-    }
-    console.log("Database connection estabilished!");
-  }
-  );
-
-  function getMeals(callback) {
+  function getMeals(cb) {
     Meal.find({}, function (err, docs) {
       if (err) {
-        callback(err, null)
+        cb(err, null);
+        return;
       }
-      callback(null, docs);
+      cb(null, docs);
+      return;
     });
+  };
+
+  function addMeal(meal, cb) {
+    let newMeal = new Meal(meal);
+    newMeal.save(function(err) {
+      if (err) {
+        cb(err);
+        return;
+      }
+      cb(null);
+      return;
+    });
+  };
+
+  function deleteMeal(id, cb) {
+    Meal.remove({_id: id}, function(err) {
+      if (err) {
+        cb(err, null);
+        return;
+      }
+      cb(null, "removed");
+      return;
+    })
   }
 
   return {
-    meal: Meal,
-    getMeals: getMeals
-  }
+    getAllMeals: getMeals,
+    addMeal: addMeal
+  };
+};
 
-})();
+module.exports = queries;

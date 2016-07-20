@@ -10,7 +10,6 @@ describe('Tests for GET', function () {
   beforeEach(function(done) {
     setTimeout(function(){
        flag = true;
-       // complete the async beforeEach
        done();
      }, 500);
     this.xhr = sinon.useFakeXMLHttpRequest();
