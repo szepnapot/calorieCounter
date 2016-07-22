@@ -40,13 +40,8 @@ describe('Routing', function() {
     it("response is JSON", function(done) {
     request(url)
     .get('/meals')
-    .send(null, done())
-    .end(function(err, res) {
-      if (err) {
-        throw err;
-      }
-      should(res).have.property('content-type', 'text');
-      });
-    });
+    .expect(200)
+    .expect('Content-Type', 'application/json', done());
   });
+});
 });

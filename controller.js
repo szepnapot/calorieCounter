@@ -1,6 +1,6 @@
 const controller = function(queries){
   'use strict';
-  const successfulPost = {status: "ok"};
+  const failedMessage = {status: "not exists"};
 
   function index(req, res){
     res.render('index');
@@ -10,33 +10,53 @@ const controller = function(queries){
     let newMeal = {name : req.body.name,
                     calories: req.body.calories,
                     date: req.body.date};
-    queries.addMeal(newMeal, function(err) {
+    queries.addMeal(newMeal, function(err, doc) {
       if (err) {
         res.status(404).send("Error: " + err);
         return;
       }
-      res.json(successfulPost);
+      res.json(doc);
     });
   }
 
   function listMeals(req, res) {
+    if (req.query.filter) {
+      queries.filterMeals(req.query.day, function(err, cont){
+        if (err) {
+          res.status(404).send("Error: " + err);
+          return;
+        }
+        res.json(cont);
+        return;
+      })
+      return;
+    }
     queries.getAllMeals(function(err, cont){
       if (err) {
         res.status(404).send("Error: " + err);
         return;
       }
       res.json(cont);
+      return;
     });
   }
 
-  // function deleteMeal(req, res) {
-  //   queries.
-  // }
+  function deleteMeal(req, res) {
+    queries.deleteMeal(req.params.id, function(err, cont){
+      if (err) {
+        res.status(404).json(failedMessage);
+        return;
+      }
+      res.json(cont);
+      return;
+    })
+  }
 
   return {
     getHomePage: index,
     getAll: listMeals,
-    postMeal: postMeal
+    postMeal: postMeal,
+    deleteMeal: deleteMeal
   }
 };
 

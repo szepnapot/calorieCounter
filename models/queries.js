@@ -18,30 +18,52 @@ const queries = function(schema){
 
   function addMeal(meal, cb) {
     let newMeal = new Meal(meal);
-    newMeal.save(function(err) {
+    newMeal.save(function(err, doc) {
       if (err) {
-        cb(err);
+        cb(err, null);
         return;
-      }
-      cb(null);
+      };
+      cb(null, {status: "ok",
+                meal: {
+                      id: doc._id,
+                      name: doc.name,
+                      calories: doc.calories,
+                      date: doc.date}});
       return;
     });
   };
 
   function deleteMeal(id, cb) {
-    Meal.remove({_id: id}, function(err) {
+    Meal.remove({_id: id}, function(err, doc) {
       if (err) {
         cb(err, null);
         return;
       }
-      cb(null, "removed");
+      cb(null, {status: "ok", meal: {"id": id}});
       return;
     })
-  }
+  };
+
+  function filterMealsByDay(date, cb) {
+    let year = date.split('-')[0];
+    let month = date.split('-')[1];
+    let day = date.split('-')[2];
+    Meal.find({"date": {"$gte": (new Date(date)).toISOString()}},
+              function(err, doc) {
+                if (err) {
+                  cb(err, null);
+                  return;
+                };
+                cb(null, doc);
+                return;
+              });
+  };
 
   return {
     getAllMeals: getMeals,
-    addMeal: addMeal
+    addMeal: addMeal,
+    deleteMeal: deleteMeal,
+    filterMeals: filterMealsByDay
   };
 };
 

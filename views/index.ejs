@@ -10,17 +10,14 @@
     </header>
 
     <main>
-      <div class="page-header">
-        <h1 class="text-center">Calorie Counter <small>cheeseburger</small></h1>
-      </div>
-      <div class="row">
-        <div class="col-lg-8 col-lg-offset-2">
-          <% include ./partials/input %>
-          <br>
-          <% include ./partials/table %>
-        </div>
-    </div>
-
+    <% include ./partials/input %>
+    <br>
+    <br>
+      <% include ./partials/filter %>
+    <br>
+    <br>
+    <% include ./partials/table %>
+    <% include ./partials/totalCalories %>
     </main>
 
     <footer>
