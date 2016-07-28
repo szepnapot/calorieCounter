@@ -22,6 +22,7 @@ const domFunctions = (function() {
     setTimeout(function(){
       domElements.infoBox.classList.add("hidden");
     }, 3000);
+    getMeals();
   }
 
   function getMeals(){
@@ -78,12 +79,11 @@ const domFunctions = (function() {
     }).join("&");
 }
 
-
   function filterMeals(dateOfDay){
     ajax.makeRequest('GET', '?' + encodeData(dateOfDay), '', fillTable);
   }
 
-  function deleteMeal() {
+  function deleteMeal(event) {
     ajax.makeRequest('DELETE', '/' + deleteId, '', showDeleteSuccess);
     getMeals();
   }
@@ -119,9 +119,11 @@ const domFunctions = (function() {
   }
 
   function getInputValues(){
+    let inputDate = domElements.inputDate.value.split('-');
+    let year = new Date().getUTCFullYear();
     let newMeal = {name: domElements.inputName.value,
                   calories: domElements.inputCalories.value,
-                  date: new Date().toJSON()};
+                  date: new Date(year, inputDate[0], inputDate[1] - 30).toJSON()};
     resetInput([domElements.inputName,
                 domElements.inputCalories,
                 domElements.inputDate]);

@@ -1,6 +1,6 @@
 const queries = function(schema){
   'use strict';
-
+  const moment = require('moment');
   const mongoose = schema.mongoose;
   const mealSchema = schema.mealSchema;
   const Meal = mongoose.model('Meal', mealSchema);
@@ -45,10 +45,9 @@ const queries = function(schema){
   };
 
   function filterMealsByDay(date, cb) {
-    let year = date.split('-')[0];
-    let month = date.split('-')[1];
-    let day = date.split('-')[2];
-    Meal.find({"date": {"$gte": (new Date(date)).toISOString()}},
+    let tomorrow = moment(date).add(1, 'day')._d;
+    Meal.find({"date": {"$gte": new Date(date).toISOString(),
+                        "$lte": new Date(tomorrow).toISOString()}},
               function(err, doc) {
                 if (err) {
                   cb(err, null);
